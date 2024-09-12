@@ -2,9 +2,11 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { v4 } = require('uuid');
+const cors = require('cors'); // CORS middleware
 
 const app = express();
 app.use(express.json()); // For parsing application/json
+app.use(cors()); // Enable CORS for all routes
 
 let cards = []; // Temporary in-memory storage
 const dbFilePath = path.join(__dirname, 'db.json');
@@ -13,6 +15,8 @@ const dbFilePath = path.join(__dirname, 'db.json');
 fs.readFile(dbFilePath, 'utf8', (err, data) => {
     if (!err) {
         cards = JSON.parse(data).cards || [];
+    } else {
+        console.error('Error loading initial data:', err);
     }
 });
 
@@ -33,6 +37,10 @@ app.get('/card', (req, res) => {
 // POST new card
 app.post('/card', (req, res) => {
     const { nomi, narx, xotira, aloqa, holati, rasmi } = req.body;
+    if (!nomi || !narx || !xotira || !aloqa || !holati || !rasmi) {
+        return res.status(400).json({ status: 'Bad Request', message: 'Missing required fields' });
+    }
+
     const newCard = {
         id: v4(),
         nomi,
@@ -84,9 +92,14 @@ app.put('/card/:id', (req, res) => {
 // DELETE a card by ID
 app.delete('/card/:id', (req, res) => {
     const id = req.params.id;
+    const originalLength = cards.length;
     cards = cards.filter(b => b.id !== id);
-    saveCards(); // Save updated cards to db.json
-    res.status(200).json({ status: 'Deleted' });
+    if (cards.length < originalLength) {
+        saveCards(); // Save updated cards to db.json
+        res.status(200).json({ status: 'Deleted' });
+    } else {
+        res.status(404).json({ status: 'Not Found' });
+    }
 });
 
 // Start the server
