@@ -1,0 +1,46 @@
+{
+  "card": [
+    {
+      "id": "12",
+      "nomi": "Iphone 12 pro",
+      "rasmi": "https://www.ixbt.com/img/n1/news/2020/11/6/iPhone-12-Zach-Griff-8_large.jpeg",
+      "narx": "525$",
+      "xotira": "256gb",
+      "holati": "xolati zo'r 1oy ishlatilingan yomkosti 98%",
+      "aloqa": "+998 (77) 770-72-71"
+    },
+    {
+      "id": "2fed",
+      "rasmi": "https://images.samsung.com/is/image/samsung/p6pim/uz_ru/sm-m146bzsvskz/gallery/uz-ru-galaxy-m14-5g-sm-m146-sm-m146bzsvskz-537845862?$650_519_PNG$",
+      "nomi": "Glaxy M14 5G",
+      "narx": "420$",
+      "holati": "yangi xar xil ranglarda bor",
+      "aloqa": "+998 (77) 777-70-79",
+      "xotira": "128gb"
+    },
+    {
+      "id": "cf01"
+    },
+    {
+      "id": "6049",
+      "title": "Jhon"
+    },
+    {
+      "id": "a1f4",
+      "title": "Jhon"
+    },
+    {
+      "id": "8602",
+      "title": "Jhon"
+    },
+    {
+      "id": "3461",
+      "rasmi": "https://brostore.uz/cdn/shop/files/y1_c5a2ad5c-e66f-4cd0-9acc-b22b4964e443.webp?v=1709098861",
+      "nomi": "Samsung s24 Ultra",
+      "narx": "1110$",
+      "holati": "yangi xar xil ranglarda bor",
+      "aloqa": "+998 (77) 777-70-79",
+      "xotira": "512gb"
+    }
+  ]
+}
