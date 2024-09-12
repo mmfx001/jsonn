@@ -2,7 +2,6 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { v4 } = require('uuid');
-const getCard = require('./util');
 
 const app = express();
 app.use(express.json()); // For parsing application/json
@@ -17,13 +16,22 @@ fs.readFile(dbFilePath, 'utf8', (err, data) => {
     }
 });
 
+// Helper function to save cards to db.json
+function saveCards() {
+    fs.writeFile(dbFilePath, JSON.stringify({ cards }), (err) => {
+        if (err) {
+            console.error('Error saving cards to file:', err);
+        }
+    });
+}
+
 // GET all cards
 app.get('/card', (req, res) => {
     res.status(200).json(cards);
 });
 
 // POST new card
-app.post('/card', async (req, res) => {
+app.post('/card', (req, res) => {
     const { nomi, narx, xotira, aloqa, holati, rasmi } = req.body;
     const newCard = {
         id: v4(),
@@ -35,14 +43,7 @@ app.post('/card', async (req, res) => {
         rasmi
     };
     cards.push(newCard);
-    
-    // Optionally: Save cards to db.json
-    fs.writeFile(dbFilePath, JSON.stringify({ cards }), (err) => {
-        if (err) {
-            return res.status(500).send('Internal Server Error');
-        }
-    });
-
+    saveCards(); // Save cards to db.json
     res.status(201).json({ status: 'Created', card: newCard });
 });
 
@@ -50,7 +51,6 @@ app.post('/card', async (req, res) => {
 app.get('/card/:id', (req, res) => {
     const id = req.params.id;
     const card = cards.find(b => b.id === id);
-    
     if (card) {
         res.status(200).json({ status: 'OK', card });
     } else {
@@ -59,11 +59,10 @@ app.get('/card/:id', (req, res) => {
 });
 
 // PUT update a card by ID
-app.put('/card/:id', async (req, res) => {
+app.put('/card/:id', (req, res) => {
     const id = req.params.id;
     const { nomi, narx, xotira, aloqa, holati, rasmi } = req.body;
     const idx = cards.findIndex(b => b.id === id);
-
     if (idx !== -1) {
         const updatedCard = {
             id: cards[idx].id,
@@ -75,14 +74,7 @@ app.put('/card/:id', async (req, res) => {
             rasmi: rasmi || cards[idx].rasmi
         };
         cards[idx] = updatedCard;
-
-        // Optionally: Save updated cards to db.json
-        fs.writeFile(dbFilePath, JSON.stringify({ cards }), (err) => {
-            if (err) {
-                return res.status(500).send('Internal Server Error');
-            }
-        });
-
+        saveCards(); // Save updated cards to db.json
         res.status(200).json({ status: 'OK', card: updatedCard });
     } else {
         res.status(404).json({ status: 'Not Found' });
@@ -93,14 +85,7 @@ app.put('/card/:id', async (req, res) => {
 app.delete('/card/:id', (req, res) => {
     const id = req.params.id;
     cards = cards.filter(b => b.id !== id);
-
-    // Optionally: Save updated cards to db.json
-    fs.writeFile(dbFilePath, JSON.stringify({ cards }), (err) => {
-        if (err) {
-            return res.status(500).send('Internal Server Error');
-        }
-    });
-
+    saveCards(); // Save updated cards to db.json
     res.status(200).json({ status: 'Deleted' });
 });
 
